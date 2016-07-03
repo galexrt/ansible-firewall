@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-firewalling-ftw
+# defaults file for ansible-firewall
 firewalling_filter_chains: []
 firewalling_nat_chains: []
 firewalling_mangle_chains: []

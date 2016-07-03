@@ -1,5 +1,5 @@
-ansible-firewalling-ftw
-=======================
+ansible-firewall
+================
 
 A try at an Ansible iptables managing role.
 
