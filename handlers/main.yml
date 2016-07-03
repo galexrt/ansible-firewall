@@ -1,2 +1,20 @@
 ---
-# handlers file for ansible-firewalling-ftw
+- name: start and enable iptables and ip6tables
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+    - iptables
+    - ip6tables
+  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
+
+- name: start and enable iptables-persistent and ip6tables-persistent
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+    - iptables-persistent
+    - ip6tables-persistent
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"

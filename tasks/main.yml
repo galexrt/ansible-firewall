@@ -1,7 +1,21 @@
 ---
-# tasks file for ansible-firewalling-ftw
-- name: Output firewalling-rule-file
+- name: Stop firewalld service
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: has_firewalld
+
+- name: Install iptables-persistent
+  action: "{{ ansible_pkg_mgr }}"
+  args:
+    name: "iptables-services"
+    state: latest
+
+- name: Generate iptables file
   template:
-    src: firewalling-rule-file
-    dest: /home/atrost/firewalling-rule-file
-    owner: atrost
+    src: firewall.j2
+    dest: /root/firewall
+#  notify:
+#    - start and enable iptables and ip6tables
+#    - start and enable iptables-persistent and ip6tables-persistent
