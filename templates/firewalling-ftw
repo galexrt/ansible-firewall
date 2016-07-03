@@ -1,8 +1,0 @@
-#!/bin/bash
-
-IPTABLES="{{ iptables_location }}"
-HOSTNAME="{{ inventory_hostname }}"
-
-for RULE_FILE in "{{ firewalling_ftw_rules_location }}"; do
-    echo "$RULE_FILE"
-done
