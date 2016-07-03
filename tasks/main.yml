@@ -1,0 +1,7 @@
+---
+# tasks file for ansible-firewalling-ftw
+- name: Output firewalling-rule-file
+  template:
+    src: firewalling-rule-file
+    dest: /home/atrost/firewalling-rule-file
+    owner: atrost

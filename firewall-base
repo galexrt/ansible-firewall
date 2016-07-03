@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# Tabelle flushen
+iptables -F
+iptables -t nat -F
+iptables -t mangle -F
+iptables -X
+iptables -t nat -X
+iptables -t mangle -X
+
+# Default-Policies setzen
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+
+# MY_REJECT-Chain
+iptables -N MY_REJECT
+
+# MY_REJECT fuellen
+iptables -A MY_REJECT -p tcp -m limit --limit 7200/h -j LOG --log-prefix "REJECT TCP "
+iptables -A MY_REJECT -p tcp -j REJECT --reject-with tcp-reset
+iptables -A MY_REJECT -p udp -m limit --limit 7200/h -j LOG --log-prefix "REJECT UDP "
+iptables -A MY_REJECT -p udp -j REJECT --reject-with icmp-port-unreachable
+iptables -A MY_REJECT -p icmp -m limit --limit 7200/h -j LOG --log-prefix "DROP ICMP "
+iptables -A MY_REJECT -p icmp -j DROP
+iptables -A MY_REJECT -m limit --limit 7200/h -j LOG --log-prefix "REJECT OTHER "
+iptables -A MY_REJECT -j REJECT --reject-with icmp-proto-unreachable
+
+# MY_DROP-Chain
+iptables -N MY_DROP
+iptables -A MY_DROP -m limit --limit 7200/h -j LOG --log-prefix "PORTSCAN DROP "
+iptables -A MY_DROP -j DROP
+
+# Alle verworfenen Pakete protokollieren
+iptables -A INPUT -m state --state INVALID -m limit --limit 7200/h -j LOG --log-prefix "INPUT INVALID "
+iptables -A OUTPUT -m state --state INVALID -m limit --limit 7200/h -j LOG --log-prefix "OUTPUT INVALID "
+
+# Korrupte Pakete zurueckweisen
+iptables -A INPUT -m state --state INVALID -j DROP
+iptables -A OUTPUT -m state --state INVALID -j DROP
+
+# Stealth Scans etc. DROPpen
+# Keine Flags gesetzt
+iptables -A INPUT -p tcp --tcp-flags ALL NONE -j MY_DROP
+
+# SYN und FIN gesetzt
+iptables -A INPUT -p tcp --tcp-flags SYN,FIN SYN,FIN -j MY_DROP
+
+# SYN und RST gleichzeitig gesetzt
+iptables -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j MY_DROP
+
+# FIN und RST gleichzeitig gesetzt
+iptables -A INPUT -p tcp --tcp-flags FIN,RST FIN,RST -j MY_DROP
+
+# FIN ohne ACK
+iptables -A INPUT -p tcp --tcp-flags ACK,FIN FIN -j MY_DROP
+
+# PSH ohne ACK
+iptables -A INPUT -p tcp --tcp-flags ACK,PSH PSH -j MY_DROP
+
+# URG ohne ACK
+iptables -A INPUT -p tcp --tcp-flags ACK,URG URG -j MY_DROP
+
+# Loopback-Netzwerk-Kommunikation zulassen
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+# Connection-Tracking aktivieren
+iptables -A OUTPUT -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# HTTP
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 80 -j ACCEPT
+
+# HTTPS
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 443 -j ACCEPT
+
+# SMTP
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 25 -j ACCEPT
+
+# SMTPS
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 465 -j ACCEPT
+
+# POP3
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 110 -j ACCEPT
+
+# POP3S
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 995 -j ACCEPT
+
+# IMAP
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 143 -j ACCEPT
+
+# IMAPS
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 993 -j ACCEPT
+
+# FTP
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 21 -j ACCEPT
+
+# SSH
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 22 -j ACCEPT
+
+# MYSQL
+iptables -A INPUT -i eth0 -m state --state NEW -p tcp --dport 3306 -j ACCEPT
+
+# Default-Policies mit REJECT
+iptables -A INPUT -j MY_REJECT
+iptables -A OUTPUT -j MY_REJECT
