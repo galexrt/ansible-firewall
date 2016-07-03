@@ -1,17 +1,25 @@
 ---
 # defaults file for ansible-firewall
-firewalling_filter_chains: []
-firewalling_nat_chains: []
-firewalling_mangle_chains: []
+firewall_default_chains:
+  - INPUT
+  - DROP
+  - ACCEPT
+  - REJECT
+  - LOG
+  - OUTPUT
 
-firewalling_iptables_location: "/usr/sbin/iptables"
+firewall_filter_chains: []
+firewall_nat_chains: []
+firewall_mangle_chains: []
 
-firewalling_filter_rules:
+firewall_iptables_path: "/usr/sbin/iptables"
+
+firewall_filter_rules:
   - name: 001 accept all to lo interface
     chain: INPUT
     proto: all
     iniface: lo
-    action: accept
+    action: ACCEPT
   - name: 004 accept related established rules
     chain: INPUT
     proto: all
@@ -30,10 +38,10 @@ firewalling_filter_rules:
       - NEW
     dport: "53"
     proto: udp
-    action: accept
+    action: ACCEPT
   - name: 900 log dropped output chain
     chain: OUTPUT
-    jump: LOG
+    action: LOG
     log_level: "6"
     log_prefix: "[IPTABLES OUTPUT] dropped "
     proto: all

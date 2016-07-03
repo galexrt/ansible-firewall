@@ -1,30 +1,79 @@
-{% for rule in firewalling_filter_rules %}
-{% if rule.chain not in firewalling_filter_chains %}
-{{ firewalling_iptables_location }} -N {{ rule.chain }}
-{% set firewalling_filter_chains[] = rule.chain %}
+#!/bin/bash
+
+IPTABLES="{{ firewall_iptables_path }}"
+
+{% if firewall_filter_chains|length > 0 %}
+# firewall_filter_chains
+{% for chain in firewall_filter_chains %}
+{% if chain not in firewall_default_chains %}
+$IPTABLES -N {{ chain.name }}
 {% endif %}
-{% if rule.custom is not defined -%}
-{{ firewalling_iptables_location }} -A {{ rule.chain }}
-{% if rule.iniface is defined -%}-i {{ rule.iniface }} {%- endif %}
-{% if rule.outiface is defined -%}-o {{ rule.outiface }} {%- endif %}
-{% if rule.proto != "all" -%}-p {{ rule.proto }} {%- endif %}
-{% if rule.icmp is defined -%}--icmp-type {{ rule.icmp }} {%- endif %}
-{% if rule.dport is defined -%}--dport {{ rule.dport }} {%- endif %}
-{% if rule.dports is defined -%}-m multiport --dports {% for port in rule.dports %}{{ port }}{% if not loop.last %},{% endif %}{% endfor %} {%- endif %}
-{% if rule.sport is defined -%}--sport {{ rule.sport }} {%- endif %}
-{% if rule.sports is defined -%}-m multiport --sports {{ rule.sports }} {%- endif %}
-{% if rule.to_destination is defined -%}--to-destination {{ rule.to_destination }} {%- endif %}
-{% if rule.source is defined -%}-s {{ rule.source }} {%- endif %}
-{% if rule.src_range is defined -%}--src-range {{ rule.src_range }} {%- endif %}
-{% if rule.src_type is defined -%}--src-type {{ rule.src_type }} {%- endif %}
-{% if rule.dst_range is defined -%}--dst-range {{ rule.dst_range }} {%- endif %}
-{% if rule.dst_type is defined -%}--dst-type {{ rule.dst_type }} {%- endif %}
-{% if rule.connmark is defined and rule.connmark.id is defined -%}-m mark {% if rule.connmark.negative is defined and rule.connmark.negative %}! {% endif %}--mark {{ rule.connmark.id }} {%- endif %}
-{% if rule.ctstate is defined -%}-m conntrack --ctstate {% for state in rule.ctstate %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %} {%- endif %}
-{% if rule.state is defined -%}-m state --state {% for state in rule.state %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %} {%- endif %}
-{% if rule.log_prefix is defined -%}--log-prefix {{ rule.log_prefix }} {%- endif %}{% if rule.log_level is defined -%}--log-level {{ rule.log_level }} {%- endif %}
--j {{ rule.action }}
-{%- else -%}
-{{ rule.custom }}
-{%- endif %}
 {% endfor %}
+{% endif %}
+{% if firewall_nat_chains|length > 0 %}
+# firewall_nat_chains
+{% for chain in firewall_nat_chains %}
+{% if chain not in firewall_default_chains %}
+$IPTABLES -t nat -N {{ chain.name }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if firewall_mangle_chains|length > 0 %}
+# firewall_mangle_chains
+{% for chain in firewall_mangle_chains %}
+{% if chain not in firewall_default_chains %}
+$IPTABLES -t mangle -N {{ chain.name }}
+{% endif %}
+{% endfor %}
+{% endif %}
+# Firewall rules ===============================================================
+{% for rule in firewall_filter_rules %}
+{% if rule.custom is not defined %}
+# Rule: {{ rule.name }}
+$IPTABLES{% if rule.table is defined and rule.table != "filter" %} -t {{ rule.table }}{% endif %} -A {{ rule.chain }} {% if rule.iniface is defined %}-i {{ rule.iniface }} {% endif %}
+{% if rule.outiface is defined %}-o {{ rule.outiface }} {% endif %}
+{% if rule.proto != "all" %}-p {{ rule.proto }} {% endif %}
+{% if rule.icmp is defined %}--icmp-type {{ rule.icmp }} {% endif %}
+{% if rule.dport is defined %}--dport {{ rule.dport }} {% endif %}
+{% if rule.dports is defined %}-m multiport --dports {% for port in rule.dports %}{{ port }}{% if not loop.last %},{% endif %}{% endfor %} {% endif %}
+{% if rule.sport is defined %}--sport {{ rule.sport }} {% endif %}
+{% if rule.sports is defined %}-m multiport --sports {{ rule.sports }} {% endif %}
+{% if rule.to_destination is defined %}--to-destination {{ rule.to_destination }} {% endif %}
+{% if rule.source is defined %}-s {{ rule.source }} {% endif %}
+{% if rule.src_range is defined %}--src-range {{ rule.src_range }} {% endif %}
+{% if rule.src_type is defined %}--src-type {{ rule.src_type }} {% endif %}
+{% if rule.dst_range is defined %}--dst-range {{ rule.dst_range }} {% endif %}
+{% if rule.dst_type is defined %}--dst-type {{ rule.dst_type }} {% endif %}
+{% if rule.connmark is defined and rule.connmark.id is defined %}-m mark {% if rule.connmark.negative is defined and rule.connmark.negative %}! {% endif %}--mark {{ rule.connmark.id }} {% endif %}
+{% if rule.ctstate is defined %}-m conntrack --ctstate {% for state in rule.ctstate %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %} {% endif %}
+{% if rule.state is defined %}-m state --state {% for state in rule.state %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %} {% endif %}
+{% if rule.log_prefix is defined %}--log-prefix "{{ rule.log_prefix }} " {% endif %}{% if rule.log_level is defined %}--log-level {{ rule.log_level }} {% endif %}-j {{ rule.action }}
+{% else %}
+{{ rule.custom }}
+{% endif %}
+{% endfor %}
+
+{% if firewall_filter_chains|length > 0 %}
+# firewall_filter_chains
+{% for chain in firewall_filter_chains %}
+{% if chain.default_policy is defined %}
+$IPTABLES -P {{ chain.default_policy }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if firewall_nat_chains|length > 0 %}
+# firewall_nat_chains
+{% for chain in firewall_nat_chains %}
+{% if chain.default_policy is defined %}
+$IPTABLES -t nat -P {{ chain.default_policy }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if firewall_mangle_chains|length > 0 %}
+# firewall_mangle_chains
+{% for chain in firewall_mangle_chains %}
+{% if chain.default_policy is defined %}
+$IPTABLES -t mangle -P {{ chain.default_policy }}
+{% endif %}
+{% endfor %}
+{% endif %}
