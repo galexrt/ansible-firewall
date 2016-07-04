@@ -7,10 +7,14 @@ firewall_default_chains:
   - REJECT
   - LOG
   - OUTPUT
+  - RETURN
 
 firewall_iptables_path: "/usr/sbin/iptables"
+firewall_ipset_path: "/usr/sbin/ipset"
 
 firewall_chain_default_policy: "ACCEPT"
+
+firewall_ipsets: []
 
 firewall_filter_rules:
   - name: 001 accept all to lo interface

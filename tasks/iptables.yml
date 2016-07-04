@@ -1,0 +1,23 @@
+---
+- name: Check if iptables path is correct
+  command: "{{ firewall_iptables_path }} --help"
+  register: iptables_help
+  ignore_errors: yes
+
+- name: Get iptables path
+  command: which iptables
+  register: iptables_location
+  when: iptables_help is defined and iptables_help.rc != 0
+
+- name: Set found iptables path
+  set_fact:
+    firewall_iptables_path: "{{ iptables_location.stdout }}"
+  when: iptables_help is defined and iptables_location.stdout is defined
+
+- name: Generate iptables file
+  template:
+    src: firewall.j2
+    dest: /root/firewall
+#  notify:
+#    - start and enable iptables and ip6tables
+#    - start and enable iptables-persistent and ip6tables-persistent
