@@ -8,44 +8,42 @@ firewall_default_chains:
   - LOG
   - OUTPUT
 
-firewall_filter_chains: []
-firewall_nat_chains: []
-firewall_mangle_chains: []
-
 firewall_iptables_path: "/usr/sbin/iptables"
+
+firewall_chain_default_policy: "ACCEPT"
 
 firewall_filter_rules:
   - name: 001 accept all to lo interface
     chain: INPUT
     proto: all
     iniface: lo
-    action: ACCEPT
+    jump: ACCEPT
   - name: 004 accept related established rules
     chain: INPUT
     proto: all
     state:
       - RELATED
       - ESTABLISHED
-    action: ACCEPT
+    jump: ACCEPT
   - name: 200 allow outgoing icmp type 8 (ping)
     chain: OUTPUT
     proto: icmp
     icmp: echo-request
-    action: ACCEPT
+    jump: ACCEPT
   - name: 200 allow outgoing dns lookups
     chain: OUTPUT
     state:
       - NEW
     dport: "53"
     proto: udp
-    action: ACCEPT
+    jump: ACCEPT
   - name: 900 log dropped output chain
     chain: OUTPUT
-    action: LOG
+    jump: LOG
     log_level: "6"
     log_prefix: "[IPTABLES OUTPUT] dropped "
     proto: all
   - name: 910 deny all other input requests
     chain: INPUT
-    action: DROP
+    jump: DROP
     proto: all
