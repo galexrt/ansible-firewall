@@ -46,6 +46,8 @@ IPTABLES="{{ firewall_iptables_path }}"
 {%- if rule.ctstate is defined %} -m conntrack --ctstate {% for state in rule.ctstate %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.state is defined %} -m state --state {% for state in rule.state %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.jump == "SET" %}
+    {%- if rule.add_set is defined and rule.add_set.name is defined %} --add-set {{ rule.add_set.name }} {{ rule.add_set.field|default('src') }}{% endif %}
+{% else %}
     {%- if rule.match_set is defined %} -m set --match-set {{ rule.match_set }} {{ rule.match_set_mode|default('src') }}{% endif %}
 {% endif %}
 {%- if rule.jump == "REJECT" %}
@@ -54,9 +56,6 @@ IPTABLES="{{ firewall_iptables_path }}"
 {%- if rule.jump == "LOG" %}
     {%- if rule.log_prefix is defined %} --log-prefix "{{ rule.log_prefix }} "{% endif %}
     {%- if rule.log_level is defined %} --log-level {{ rule.log_level }}{% endif %}
-{% endif -%}
-{%- if rule.jump == "SET" %}
-    {%- if rule.add_set is defined and rule.add_set.name is defined %} --add-set {{ rule.add_set.name }} {{ rule.add_set.field|default('src') }}{% endif %}
 {% endif %}
 
 {% else %}
