@@ -15,6 +15,6 @@
     - iptables-services
     - ipset
 
-#- include: ipset.yml
+- include: ipset.yml
 
 - include: iptables.yml

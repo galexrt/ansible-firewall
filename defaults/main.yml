@@ -8,6 +8,9 @@ firewall_default_chains:
   - LOG
   - OUTPUT
   - RETURN
+  - SET
+  - CONNMARK
+  - MARK
 
 firewall_iptables_path: "/usr/sbin/iptables"
 firewall_ipset_path: "/usr/sbin/ipset"
