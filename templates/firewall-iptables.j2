@@ -10,7 +10,7 @@ IPTABLES="{{ firewall_iptables_path }}"
 "$IPTABLES" -t mangle -X
 
 {% for chain in firewall_filter_rules %}
-# <BEGIN CHAIN {{ chain.name }} DEFAULT_POLICY: {{ chain.default_policy|default(firewall_chain_default_policy) }}>
+# <BEGIN {{ chain.name }} CHAIN DEFAULT_POLICY: {{ chain.default_policy|default(firewall_chain_default_policy) }}>
 {% if chain.name not in firewall_default_chains %}
 "$IPTABLES" -t {{ chain.table|default('filter') }} -N {{ chain.name }}
 {% endif %}
@@ -66,5 +66,5 @@ iptables {{ rule.custom }}
 # SET DEFAULT POLICY {{ chain.default_policy|default(firewall_chain_default_policy) }}
 "$IPTABLES" -t {{ chain.table|default('filter') }} -P {{ chain.name }} {{ chain.default_policy|default(firewall_chain_default_policy) }}
 {% endif %}
-# </END CHAIN {{ chain.name }}>
+# </END {{ chain.name }} CHAIN>
 {% endfor %}
