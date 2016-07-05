@@ -19,4 +19,8 @@ firewall_chain_default_policy: "ACCEPT"
 
 firewall_ipsets: []
 
-firewall_filter_rules: []
+firewall_generation_with_comments: false
+firewall_rules: []
+
+firewall_ipsets_static: []
+firewall_ipsets_static_absent: []

@@ -1,11 +1,12 @@
-{% for chain in firewall_filter_rules %}
-# <BEGIN {{ chain.name }} CHAIN DEFAULT_POLICY: {{ chain.default_policy|default(firewall_chain_default_policy) }}>
-{% if chain.name not in firewall_default_chains %}
-"$IPTABLES" -t {{ chain.table|default('filter') }} -N {{ chain.name }}
-{% endif %}
+{% for table in firewall_rules %}
+*{{ table.name }}
+{% for chain in table.chains %}
+{% if (chain.only_on_hosts is not defined and chain.not_on_hosts is not defined) or (chain.only_on_hosts is defined and chain.not_on_hosts is defined) or (chain.only_on_hosts is defined and inventory_hostname in chain.only_on_hosts) or (chain.not_on_hosts is defined and inventory_hostname not in chain.not_on_hosts) %}
+:{{ chain.name }}{% if chain.name in firewall_default_chains %} {{ chain.default_policy|default(firewall_chain_default_policy) }}{% else %} -{% endif %} [0:0]
 {% for rule in chain.rules %}
+{% if (rule.only_on_hosts is not defined and rule.not_on_hosts is not defined) or (rule.only_on_hosts is defined and rule.not_on_hosts is defined) or (rule.only_on_hosts is defined and inventory_hostname in rule.only_on_hosts) or (rule.not_on_hosts is defined and inventory_hostname not in rule.not_on_hosts) %}
 {% if rule.custom is not defined %}
-"$IPTABLES" -t {{ rule.table|default('filter') }} -A {{ chain.name }} -j {{ rule.jump }}
+-A {{ chain.name }} -j {{ rule.jump }}
 {%- if rule.iniface is defined %} -i {{ rule.iniface }}{% endif %}
 {%- if rule.outiface is defined %} -o {{ rule.outiface }}{% endif %}
 {%- if rule.proto is defined and rule.proto != "all" %} -p {{ rule.proto }}{% endif %}
@@ -48,12 +49,11 @@
 {% endif %}
 
 {% else %}
-iptables {{ rule.custom }}
+{{ rule.custom }}
+{% endif %}
 {% endif %}
 {% endfor %}
-{%- if chain.default_policy is defined %}
-# SET DEFAULT POLICY {{ chain.default_policy|default(firewall_chain_default_policy) }}
-"$IPTABLES" -t {{ chain.table|default('filter') }} -P {{ chain.name }} {{ chain.default_policy|default(firewall_chain_default_policy) }}
 {% endif %}
-# </END {{ chain.name }} CHAIN>
+{% endfor %}
+COMMIT
 {% endfor %}

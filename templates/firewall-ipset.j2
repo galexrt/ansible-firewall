@@ -1,12 +1,20 @@
 {% for item in firewall_ipsets_static %}
+{% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}
 {% if item.recreate|default(false) %}
-destroy {{ item.name }}
+-! destroy {{ item.name }}
 {% endif %}
-create {{ item.name }} {{ item.type }} {% if item.family is defined %}family {{ item.family }}{% endif %}
+-! create {{ item.name }} {{ item.type }} {% if item.family is defined %}family {{ item.family }}{% endif %}
 
 {% for part in item.content|default([]) %}
-add {{ item.name }} {% if part.name is defined %}{{ part.name }}
+{% if (part.only_on_hosts is not defined and part.not_on_hosts is not defined) or (part.only_on_hosts is defined and part.not_on_hosts is defined) or (part.only_on_hosts is defined and inventory_hostname in part.only_on_hosts) or (part.not_on_hosts is defined and inventory_hostname not in part.not_on_hosts) %}
+-! add {{ item.name }} {% if part.name is defined %}{{ part.name }}
 {% elif part.subset is defined %}{{ part.subset }}{% else %}{{ part }}{% endif %}
 
+{% endif %}
 {% endfor %}
+{% endif %}
+{% endfor %}
+
+{% for item in firewall_ipsets_static_absent %}
+destory {{ item.name }}
 {% endfor %}
