@@ -16,11 +16,8 @@
 
 - name: Generate iptables file
   template:
-    src: "{{ item }}"
-    dest: "/root/{{ item }}"
-  with_items:
-    - firewall-iptables.j2
-    - firewall-iptables-persistent.j2
+    src: "firewall-iptables-persistent.j2"
+    dest: "/etc/sysconfig/iptables-persistent"
 #  notify:
 #    - start and enable iptables and ip6tables
 #    - start and enable iptables-persistent and ip6tables-persistent

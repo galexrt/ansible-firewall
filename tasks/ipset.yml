@@ -17,7 +17,7 @@
 - name: Generate ipset file
   template:
     src: firewall-ipset.j2
-    dest: /root/firewall-ipset
+    dest: /etc/sysconfig/ipset-rules
 #  notify:
 #    - start and enable iptables and ip6tables
 #    - start and enable iptables-persistent and ip6tables-persistent
