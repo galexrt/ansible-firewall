@@ -1,11 +1,9 @@
 {% for table in firewall_rules %}
 *{{ table.name }}
 {% for chain in table.chains %}
-{% if (chain.only_for_groups is not defined and chain.not_for_groups is not defined) or (chain.only_for_groups is defined and chain.not_for_groups is defined) or (chain.only_for_groups is defined and inventory_hostname in chain.only_for_groups) or (chain.not_for_groups is defined and inventory_hostname not in chain.not_for_groups) %}
 {% if (chain.only_on_hosts is not defined and chain.not_on_hosts is not defined) or (chain.only_on_hosts is defined and chain.not_on_hosts is defined) or (chain.only_on_hosts is defined and inventory_hostname in chain.only_on_hosts) or (chain.not_on_hosts is defined and inventory_hostname not in chain.not_on_hosts) %}
 :{{ chain.name }}{% if chain.name in firewall_default_chains %} {{ chain.default_policy|default(firewall_chain_default_policy) }}{% else %} -{% endif %} [0:0]
 {% for rule in chain.rules %}
-{% if (rule.only_for_groups is not defined and rule.not_for_groups is not defined) or (rule.only_for_groups is defined and rule.not_for_groups is defined) or (rule.only_for_groups is defined and inventory_hostname in rule.only_for_groups) or (rule.not_for_groups is defined and inventory_hostname not in rule.not_for_groups) %}
 {% if (rule.only_on_hosts is not defined and rule.not_on_hosts is not defined) or (rule.only_on_hosts is defined and rule.not_on_hosts is defined) or (rule.only_on_hosts is defined and inventory_hostname in rule.only_on_hosts) or (rule.not_on_hosts is defined and inventory_hostname not in rule.not_on_hosts) %}
 {% if rule.custom is not defined %}
 -A {{ chain.name }} -j {{ rule.jump }}
@@ -54,9 +52,7 @@
 {{ rule.custom }}
 {% endif %}
 {% endif %}
-{% endif %}
 {% endfor %}
-{% endif %}
 {% endif %}
 {% endfor %}
 COMMIT

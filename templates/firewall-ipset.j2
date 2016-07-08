@@ -1,5 +1,4 @@
 {% for item in firewall_ipsets_static %}
-{% if (item.only_for_groups is not defined and item.not_for_groups is not defined) or (item.only_for_groups is defined and item.not_for_groups is defined) or (item.only_for_groups is defined and inventory_hostname in item.only_for_groups) or (item.not_for_groups is defined and inventory_hostname not in item.not_for_groups) %}
 {% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}
 {% if item.recreate|default(false) %}
 -! destroy {{ item.name }}
@@ -7,22 +6,17 @@
 -! create {{ item.name }} {{ item.type }} {% if item.family is defined %}family {{ item.family }}{% endif %}
 
 {% for part in item.content|default([]) %}
-{% if (part.only_for_groups is not defined and part.not_for_groups is not defined) or (part.only_for_groups is defined and part.not_for_groups is defined) or (part.only_for_groups is defined and inventory_hostname in part.only_for_groups) or (part.not_for_groups is defined and inventory_hostname not in part.not_for_groups) %}
 {% if (part.only_on_hosts is not defined and part.not_on_hosts is not defined) or (part.only_on_hosts is defined and part.not_on_hosts is defined) or (part.only_on_hosts is defined and inventory_hostname in part.only_on_hosts) or (part.not_on_hosts is defined and inventory_hostname not in part.not_on_hosts) %}
 -! add {{ item.name }} {% if part.name is defined %}{{ part.name }}
 {% elif part.subset is defined %}{{ part.subset }}{% else %}{{ part }}{% endif %}
 
 {% endif %}
-{% endif %}
 {% endfor %}
-{% endif %}
 {% endif %}
 {% endfor %}
 
 {% for item in firewall_ipsets_static_absent %}
-{% if (item.only_for_groups is not defined and item.not_for_groups is not defined) or (item.only_for_groups is defined and item.not_for_groups is defined) or (item.only_for_groups is defined and inventory_hostname in item.only_for_groups) or (item.not_for_groups is defined and inventory_hostname not in item.not_for_groups) %}
 {% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}
 !- destory {{ item.name }}
-{% endif %}
 {% endif %}
 {% endfor %}

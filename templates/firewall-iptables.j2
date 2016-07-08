@@ -11,14 +11,12 @@ IPTABLES="{{ firewall_iptables_path }}"
 
 {% for table in firewall_rules %}
 {% for chain in table.chains %}
-{% if (chain.only_for_groups is not defined and chain.not_for_groups is not defined) or (chain.only_for_groups is defined and chain.not_for_groups is defined) or (chain.only_for_groups is defined and inventory_hostname in chain.only_for_groups) or (chain.not_for_groups is defined and inventory_hostname not in chain.not_for_groups) %}
 {% if (chain.only_on_hosts is not defined and chain.not_on_hosts is not defined) or (chain.only_on_hosts is defined and chain.not_on_hosts is defined) or (chain.only_on_hosts is defined and inventory_hostname in chain.only_on_hosts) or (chain.not_on_hosts is defined and inventory_hostname not in chain.not_on_hosts) %}
 # <BEGIN {{ chain.name }} CHAIN DEFAULT_POLICY: {{ chain.default_policy|default(firewall_chain_default_policy) }}>
 {% if chain.name not in firewall_default_chains %}
 "$IPTABLES" -t {{ table.name }} -N {{ chain.name }}
 {% endif %}
 {% for rule in chain.rules %}
-{% if (rule.only_for_groups is not defined and rule.not_for_groups is not defined) or (rule.only_for_groups is defined and rule.not_for_groups is defined) or (rule.only_for_groups is defined and inventory_hostname in rule.only_for_groups) or (rule.not_for_groups is defined and inventory_hostname not in rule.not_for_groups) %}
 {% if (rule.only_on_hosts is not defined and rule.not_on_hosts is not defined) or (rule.only_on_hosts is defined and rule.not_on_hosts is defined) or (rule.only_on_hosts is defined and inventory_hostname in rule.only_on_hosts) or (rule.not_on_hosts is defined and inventory_hostname not in rule.not_on_hosts) %}
 {% if rule.name is defined and firewall_generation_with_comments %}
 ## {{ rule.name }}
@@ -70,14 +68,12 @@ IPTABLES="{{ firewall_iptables_path }}"
 "$IPTABLES" {{ rule.custom }}
 {% endif %}
 {% endif %}
-{% endif %}
 {% endfor %}
 {%- if chain.default_policy is defined %}
 # SET DEFAULT POLICY {{ chain.default_policy|default(firewall_chain_default_policy) }}
 "$IPTABLES" -t {{ table.name|default('filter') }} -P {{ chain.name }} {{ chain.default_policy|default(firewall_chain_default_policy) }}
 {% endif %}
 # </END {{ chain.name }} CHAIN>
-{% endif %}
 {% endif %}
 {% endfor %}
 {% endfor %}
