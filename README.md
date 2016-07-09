@@ -1,22 +1,23 @@
 ansible-firewall
 ================
 
-A try at an Ansible iptables managing role.
+A try at at an Ansible ipset and iptables managing role.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+All systems need to use `systemd` as the service controller.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+For all available variables take a look at the `defaults/main.yml`.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role has a dependency on my `common-facts` role.
+You can see it [here](https://github.com/galexrt/ansible-common-facts).
 
 Example Playbook
 ----------------
@@ -25,7 +26,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: galexrt.firewall }
 
 License
 -------
@@ -35,4 +36,4 @@ Apache 2.0 License
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+If you have problems with the role, feel free to create an issue on Github or contact me by mail.
