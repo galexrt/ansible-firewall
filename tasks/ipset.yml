@@ -34,7 +34,7 @@
 
 - name: Generate ipset file
   template:
-    src: firewall-ipset.j2
+    src: ipset.j2
     dest: /etc/sysconfig/ipset
-#  notify:
-#    - start and enable ipset
+  notify:
+    - start and enable ipset

@@ -16,7 +16,7 @@
 
 - name: Generate iptables file
   template:
-    src: "firewall-iptables-persistent.j2"
+    src: "iptables-persistent.j2"
     dest: "/etc/sysconfig/iptables-persistent"
 #  notify:
 #    - start and enable iptables and ip6tables
