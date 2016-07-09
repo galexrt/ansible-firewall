@@ -14,10 +14,14 @@
     firewall_ipset_path: "{{ iptables_location.stdout }}"
   when: ipset_help is defined and ipset_location.stdout is defined
 
+- name: Create ipset service file
+  copy:
+    src: ipset.service
+    dest: "/usr/lib/systemd/system/ipset.service"
+
 - name: Generate ipset file
   template:
     src: firewall-ipset.j2
     dest: /etc/sysconfig/ipset-rules
 #  notify:
-#    - start and enable iptables and ip6tables
-#    - start and enable iptables-persistent and ip6tables-persistent
+#    - start and enable ipset
