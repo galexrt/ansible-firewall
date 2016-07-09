@@ -25,9 +25,12 @@
   when: ipset_help is defined and ipset_location.stdout is defined
 
 - name: Create ipset service file
-  copy:
-    src: ipset.service
+  template:
+    src: ipset.service.j2
     dest: "{{ systemd_system_unit_directory }}/ipset.service"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Generate ipset file
   template:

@@ -1,4 +1,5 @@
 #!/bin/bash
+{{ ansible_managed | comment }}
 
 IPTABLES="{{ firewall_iptables_path }}"
 
@@ -9,7 +10,7 @@ IPTABLES="{{ firewall_iptables_path }}"
 "$IPTABLES" -t nat -X
 "$IPTABLES" -t mangle -X
 
-{% for table in firewall_rules %}
+{% for table in firewall_iptables %}
 {% for chain in table.chains %}
 {% if (chain.only_on_hosts is not defined and chain.not_on_hosts is not defined) or (chain.only_on_hosts is defined and chain.not_on_hosts is defined) or (chain.only_on_hosts is defined and inventory_hostname in chain.only_on_hosts) or (chain.not_on_hosts is defined and inventory_hostname not in chain.not_on_hosts) %}
 # <BEGIN {{ chain.name }} CHAIN DEFAULT_POLICY: {{ chain.default_policy|default(firewall_chain_default_policy) }}>

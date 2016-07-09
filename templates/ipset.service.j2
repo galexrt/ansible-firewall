@@ -1,0 +1,14 @@
+[Unit]
+Description=Loading IP Sets
+Before=network-pre.target iptables.service ip6tables.service
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/ipset -f "{{ ipset_conf_path }}" restore
+ExecReload=/usr/bin/ipset -f "{{ ipset_conf_path }}" restore
+ExecStop=/usr/bin/ipset destroy
+
+[Install]
+WantedBy=multi-user.target

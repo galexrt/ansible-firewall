@@ -20,11 +20,11 @@ firewall_iptables_path: "/usr/sbin/iptables"
 firewall_ipset_path: "/usr/sbin/ipset"
 
 firewall_chain_default_policy: "ACCEPT"
+firewall_generation_with_comments: false
 
 firewall_ipsets: []
-
-firewall_generation_with_comments: false
-firewall_rules: []
-
-firewall_ipsets_static: []
-firewall_ipsets_static_absent: []
+# firewall_ipsets_base: []
+firewall_ipsets_absent: []
+firewall_iptables: []
+# firewall_iptables_base: []
+firewall_iptables_absent: []

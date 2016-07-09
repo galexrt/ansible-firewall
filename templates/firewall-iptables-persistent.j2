@@ -1,4 +1,5 @@
-{% for table in firewall_rules %}
+{{ ansible_managed | comment }}
+{% for table in firewall_iptables %}
 *{{ table.name }}
 {% for chain in table.chains %}
 {% if (chain.only_on_hosts is not defined and chain.not_on_hosts is not defined) or (chain.only_on_hosts is defined and chain.not_on_hosts is defined) or (chain.only_on_hosts is defined and inventory_hostname in chain.only_on_hosts) or (chain.not_on_hosts is defined and inventory_hostname not in chain.not_on_hosts) %}
