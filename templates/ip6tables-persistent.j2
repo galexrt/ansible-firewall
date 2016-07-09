@@ -24,8 +24,8 @@
 {%- if rule.src_type is defined %} --src-type {{ rule.src_type }} {% endif %}
 {%- if rule.dst_range is defined %} --dst-range {{ rule.dst_range }}{% endif %}
 {%- if rule.dst_type is defined %} --dst-type {{ rule.dst_type }}{% endif %}
-{%- if rule.jump == "MARK" %}
-    {%- if rule.set_mark is defined %} --set-mark {{ rule.set_mark }}{% endif %}
+{%- if rule.rt is defined and rule.rt %}
+    {%- if rule.rt_type is defined %} -m rt --rt-type {{ rule.rt_type }}{% endif %}
 {% endif %}
 {%- if rule.jump == "CONNMARK" %}
     {%- if rule.restore_mark is defined %} --save-mark{% endif %}

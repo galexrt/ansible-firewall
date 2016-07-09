@@ -14,18 +14,33 @@
     firewall_iptables_path: "{{ iptables_location.stdout }}"
   when: iptables_help is defined and iptables_location.stdout is defined
 
+- name: Create iptables service file
+  copy:
+    src: "{{ item }}"
+    dest: "{{ systemd_system_unit_directory }}/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - iptables.service
+    - ip6tables.service
+  notify:
+    - reload systemd
+
 - name: Generate iptables file
   template:
     src: "iptables-persistent.j2"
     dest: "/etc/sysconfig/iptables"
   notify:
-    - start and enable iptables
-    - start and enable iptables-persistent
+    - start and enable ipset
+    - restart and enable iptables
+    - restart and enable iptables-persistent
 
 - name: Generate ip6tables file
   template:
     src: "ip6tables-persistent.j2"
     dest: "/etc/sysconfig/ip6tables"
   notify:
+    - start and enable ipset
     - restart and enable ip6tables
     - restart and enable ip6tables-persistent

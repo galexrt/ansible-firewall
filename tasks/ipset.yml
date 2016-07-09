@@ -39,4 +39,4 @@
     src: ipset.j2
     dest: /etc/sysconfig/ipset
   notify:
-    - start and enable ipset
+    - restart and enable ipset

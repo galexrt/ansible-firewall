@@ -6,6 +6,9 @@
     enabled: no
   when: has_firewalld
 
+- name: Mask firewalld service
+  command: systemctl mask firewalld.service
+
 - name: Install iptables tools (rhel)
   action: "{{ ansible_pkg_mgr }}"
   args:
