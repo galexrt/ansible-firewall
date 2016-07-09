@@ -6,9 +6,9 @@ Wants=network-pre.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/bin/ipset -f "{{ ipset_conf_path }}" restore
-ExecReload=/usr/bin/ipset -f "{{ ipset_conf_path }}" restore
-ExecStop=/usr/bin/ipset destroy
+ExecStart={{ firewall_ipset_path }} -f "{{ ipset_conf_path }}" restore
+ExecReload={{ firewall_ipset_path }} -f "{{ ipset_conf_path }}" restore
+ExecStop={{ firewall_ipset_path }} destroy
 
 [Install]
 WantedBy=multi-user.target

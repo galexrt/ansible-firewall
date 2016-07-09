@@ -17,7 +17,15 @@
 - name: Generate iptables file
   template:
     src: "iptables-persistent.j2"
-    dest: "/etc/sysconfig/iptables-persistent"
-#  notify:
-#    - start and enable iptables and ip6tables
-#    - start and enable iptables-persistent and ip6tables-persistent
+    dest: "/etc/sysconfig/iptables"
+  notify:
+    - start and enable iptables
+    - start and enable iptables-persistent
+
+- name: Generate ip6tables file
+  template:
+    src: "ip6tables-persistent.j2"
+    dest: "/etc/sysconfig/ip6tables"
+  notify:
+    - restart and enable ip6tables
+    - restart and enable ip6tables-persistent

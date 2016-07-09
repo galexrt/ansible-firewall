@@ -1,26 +1,37 @@
 ---
+- name: reload systemd
+  command: systemctl --system daemon-reload
+
 - name: start and enable ipset
   service:
     name: "ipset"
     state: restarted
     enabled: yes
 
-- name: start and enable iptables and ip6tables
+- name: start and enable iptables
   service:
-    name: "{{ item }}"
+    name: iptables
     state: restarted
     enabled: yes
-  with_items:
-    - iptables
-    - ip6tables
   when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
 
-- name: start and enable iptables-persistent and ip6tables-persistent
+- name: start and enable iptables-persistent
   service:
-    name: "{{ item }}"
+    name: iptables-persistent
     state: restarted
     enabled: yes
-  with_items:
-    - iptables-persistent
-    - ip6tables-persistent
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
+- name: restart and enable ip6tables
+  service:
+    name: ip6tables
+    state: restarted
+    enabled: yes
+  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
+
+- name: restart and enable ip6tables-persistent
+  service:
+    name: ip6tables-persistent
+    state: restarted
+    enabled: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"

@@ -31,6 +31,8 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - reload systemd
 
 - name: Generate ipset file
   template:
