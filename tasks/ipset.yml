@@ -1,14 +1,4 @@
 ---
-- name: Set systemd_system_unit_directory for debian based systems
-  set_fact:
-    systemd_system_unit_directory: "/lib/systemd/system"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-
-- name: Set ipset_conf_path for debian based systems
-  set_fact:
-    ipset_conf_path: "/etc/default/ipset"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-
 - name: Check if ipset path is correct
   command: "{{ firewall_ipset_path }} --version"
   register: ipset_help
@@ -27,7 +17,7 @@
 - name: Create ipset service file
   template:
     src: ipset.service.j2
-    dest: "{{ systemd_system_unit_directory }}/ipset.service"
+    dest: "{{ systemd_unit_directory }}/ipset.service"
     owner: root
     group: root
     mode: 0644
@@ -37,6 +27,6 @@
 - name: Generate ipset file
   template:
     src: ipset.j2
-    dest: /etc/sysconfig/ipset
+    dest: "{{ conf_file_location }}/ipset"
   notify:
     - restart and enable ipset

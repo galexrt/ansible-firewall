@@ -17,7 +17,7 @@
 - name: Create iptables service file
   copy:
     src: "{{ item }}"
-    dest: "{{ systemd_system_unit_directory }}/{{ item }}"
+    dest: "{{ systemd_unit_directory }}/{{ item }}"
     owner: root
     group: root
     mode: 0644
@@ -30,7 +30,7 @@
 - name: Generate iptables file
   template:
     src: "iptables-persistent.j2"
-    dest: "/etc/sysconfig/iptables"
+    dest: "{{ conf_file_location }}/iptables"
   notify:
     - start and enable ipset
     - restart and enable iptables

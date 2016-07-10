@@ -1,8 +1,8 @@
 ---
 # defaults file for ansible-firewall
-systemd_system_unit_directory: "/usr/lib/systemd/system"
+systemd_unit_directory: "/usr/lib/systemd/system"
 
-ipset_conf_path: "/etc/sysconfig/ipset"
+conf_file_location: "/etc/sysconfig"
 
 firewall_default_chains:
   - INPUT

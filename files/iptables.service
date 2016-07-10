@@ -10,6 +10,7 @@ ExecReload=/usr/libexec/iptables/iptables.init reload
 ExecStop=/usr/libexec/iptables/iptables.init stop
 Environment=BOOTUP=serial
 Environment=CONSOLETYPE=serial
+Environment=IPTABLES_SAVE_ON_STOP=no
 StandardOutput=syslog
 StandardError=syslog
 
