@@ -1,11 +1,11 @@
 {{ ansible_managed | comment }}
 {% for item in firewall_ipsets %}
 {% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}
--exist create {{ item.name }} {{ item.type }} {% if item.family is defined %}family {{ item.family }}{% endif %}
+-exist create {{ item.name }} {{ item.type }}{% if item.family is defined %} family {{ item.family }}{% endif %}{% if item.timeout is defined %} timeout {{ item.timeout }}{% endif %}
 
-{% for part in item.content|default([]) %}
+{% for part in item.content %}
 {% if (part.only_on_hosts is not defined and part.not_on_hosts is not defined) or (part.only_on_hosts is defined and part.not_on_hosts is defined) or (part.only_on_hosts is defined and inventory_hostname in part.only_on_hosts) or (part.not_on_hosts is defined and inventory_hostname not in part.not_on_hosts) %}
--exist add {{ item.name }} {% if part.name is defined %}{{ part.name }}
+-exist add {{ item.name }} {% if part.name is defined %}{{ part.name }}{% if part.timeout is defined %} timeout {{ part.timeout }}{% endif %}
 {% elif part.subset is defined %}{{ part.subset }}{% else %}{{ part }}{% endif %}
 
 {% endif %}

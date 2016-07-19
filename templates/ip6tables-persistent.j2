@@ -27,6 +27,12 @@
 {%- if rule.rt is defined and rule.rt %}
     {%- if rule.rt_type is defined %} -m rt --rt-type {{ rule.rt_type }}{% endif %}
 {% endif %}
+{%- if rule.hl is defined and rule.hl %}
+    {%- if rule.hl_eq is defined %} -m hl --hl-eq {{ rule.hl_eq }}{% endif %}
+{% endif %}
+{%- if rule.jump == "MARK" %}
+    {%- if rule.set_mark is defined %} --set-mark {{ rule.set_mark }}{% endif %}
+{% endif %}
 {%- if rule.jump == "CONNMARK" %}
     {%- if rule.restore_mark is defined %} --save-mark{% endif %}
     {%- if rule.save_mark is defined %} --restore-mark{% endif %}

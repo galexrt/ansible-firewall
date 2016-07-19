@@ -3,6 +3,7 @@
   command: "{{ firewall_iptables_path }} --version"
   register: iptables_help
   ignore_errors: yes
+  changed_when: iptables_help.rc != 0
 
 - name: Get iptables path
   command: which iptables

@@ -3,6 +3,7 @@
   command: "{{ firewall_ipset_path }} --version"
   register: ipset_help
   ignore_errors: yes
+  changed_when: ipset_help.rc != 0
 
 - name: Get ipset path
   command: which ipset
