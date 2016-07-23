@@ -1,4 +1,11 @@
 {{ ansible_managed | comment }}
+
+{% for item in firewall_ipsets_absent %}
+{% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}
+-exist destory {{ item.name }}
+{% endif %}
+{% endfor %}
+
 {% for item in firewall_ipsets %}
 {% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}
 -exist create {{ item.name }} {{ item.type }}{% if item.family is defined %} family {{ item.family }}{% endif %}{% if item.timeout is defined %} timeout {{ item.timeout }}{% endif %}{% if item.range is defined %} range {{ item.range }}{% endif %}
@@ -10,11 +17,5 @@
 
 {% endif %}
 {% endfor %}
-{% endif %}
-{% endfor %}
-
-{% for item in firewall_ipsets_absent %}
-{% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}
--exist destory {{ item.name }}
 {% endif %}
 {% endfor %}
