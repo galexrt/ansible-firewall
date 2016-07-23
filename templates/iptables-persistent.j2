@@ -19,18 +19,14 @@
 {%- if rule.sport is defined %} --sport {{ rule.sport }}{% endif %}
 {%- if rule.sports is defined %} -m multiport --sports {{ rule.sports }}{% endif %}
 {%- if rule.to_destination is defined %} --to-destination {{ rule.to_destination }}{% endif %}
-{%- if rule.source is defined %} -s {{ rule.source }}{% endif %}
+{%- if rule.destination is defined %}{%- if rule.not_destination is defined and rule.not_destination == true %} !{% endif %} -d {{ rule.destination }}{% endif %}
+{%- if rule.source is defined %}{%- if rule.not_source is defined and rule.not_source == true %} !{% endif %} -s {{ rule.source }}{% endif %}
 {%- if rule.src_range is defined %} --src-range {{ rule.src_range }}{% endif %}
 {%- if rule.src_type is defined %} --src-type {{ rule.src_type }} {% endif %}
 {%- if rule.dst_range is defined %} --dst-range {{ rule.dst_range }}{% endif %}
 {%- if rule.dst_type is defined %} --dst-type {{ rule.dst_type }}{% endif %}
-{%- if rule.jump == "MARK" %}
-    {%- if rule.set_mark is defined %} --set-mark {{ rule.set_mark }}{% endif %}
-{% endif %}
-{%- if rule.jump == "CONNMARK" %}
-    {%- if rule.restore_mark is defined %} --save-mark{% endif %}
-    {%- if rule.save_mark is defined %} --restore-mark{% endif %}
-{% endif %}
+{%- if rule.jump == "MARK" %}{%- if rule.set_mark is defined %} --set-mark {{ rule.set_mark }}{% endif %}{% endif %}
+{%- if rule.jump == "CONNMARK" %}{%- if rule.restore_mark is defined %} --save-mark{% endif %}{%- if rule.save_mark is defined %} --restore-mark{% endif %}{% endif %}
 {%- if rule.connmark is defined and rule.connmark.id is defined %} -m mark{% if rule.connmark.negative is defined and rule.connmark.negative %} !{% endif %} --mark {{ rule.connmark.id }}{% endif %}
 {%- if rule.proto is defined and rule.proto == "tcp" and rule.tcp_flags is defined %} --tcp-flags {% for flag in rule.tcp_flags %}{{ flag }}{% if not loop.last %} {% endif %}{% endfor %}{% endif %}
 {%- if rule.limit is defined %} -m limit --limit {{ rule.limit }} {% endif %}

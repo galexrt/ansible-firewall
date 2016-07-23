@@ -19,7 +19,12 @@
 {%- if rule.sport is defined %} --sport {{ rule.sport }}{% endif %}
 {%- if rule.sports is defined %} -m multiport --sports {{ rule.sports }}{% endif %}
 {%- if rule.to_destination is defined %} --to-destination {{ rule.to_destination }}{% endif %}
-{%- if rule.source is defined %} -s {{ rule.source }}{% endif %}
+{%- if rule.destination is defined %}
+    {%- if rule.not_destination is defined and rule.not_destination == true %} !{% endif %} -d {{ rule.destination }}
+{% endif %}
+{%- if rule.source is defined %}
+    {%- if rule.not_source is defined and rule.not_source == true %} !{% endif %} -s {{ rule.source }}
+{% endif %}
 {%- if rule.src_range is defined %} --src-range {{ rule.src_range }}{% endif %}
 {%- if rule.src_type is defined %} --src-type {{ rule.src_type }} {% endif %}
 {%- if rule.dst_range is defined %} --dst-range {{ rule.dst_range }}{% endif %}
