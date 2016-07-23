@@ -28,3 +28,7 @@ firewall_ipsets_absent: []
 firewall_iptables: []
 # firewall_iptables_base: []
 firewall_ip6tables: []
+
+firewall_ipsets_enabled: true
+firewall_start_ipset_before_iptables: true
+firewall_disable_iptables_before_ipsets: false

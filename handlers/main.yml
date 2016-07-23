@@ -7,12 +7,14 @@
     name: "ipset"
     state: restarted
     enabled: yes
+  when: firewall_ipsets_enabled
 
 - name: start and enable ipset
   service:
     name: "ipset"
     state: started
     enabled: yes
+  when: firewall_ipsets_enabled and firewall_start_ipset_before_iptables
 
 - name: restart and enable iptables
   service:
@@ -41,3 +43,27 @@
     state: restarted
     enabled: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
+- name: stop iptables
+service:
+  name: iptables
+  state: restarted
+when: firewall_disable_iptables_before_ipsets and ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
+
+- name: stop iptables-persistent
+service:
+  name: iptables-persistent
+  state: restarted
+when: firewall_disable_iptables_before_ipsets and ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
+- name: stop ip6tables
+service:
+  name: ip6tables
+  state: stopped
+when: firewall_disable_iptables_before_ipsets and ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
+
+- name: stop ip6tables-persistent
+service:
+  name: ip6tables-persistent
+  state: stop
+when: firewall_disable_iptables_before_ipsets and ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
