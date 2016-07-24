@@ -24,7 +24,6 @@ firewall_generation_with_comments: false
 
 firewall_ipsets: []
 # firewall_ipsets_base: []
-firewall_ipsets_absent: []
 firewall_iptables: []
 # firewall_iptables_base: []
 firewall_ip6tables: []
