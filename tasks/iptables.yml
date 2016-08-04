@@ -1,4 +1,22 @@
 ---
+- name: Install iptables (rhel)
+  action: "{{ ansible_pkg_mgr }}"
+  args:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - iptables-services
+  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
+
+- name: Install iptables (deb)
+  action: "{{ ansible_pkg_mgr }}"
+  args:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - iptables-persistent
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
 - name: Check if iptables path is correct
   command: "{{ firewall_iptables_path }} --version"
   register: iptables_help

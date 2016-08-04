@@ -9,27 +9,6 @@
 - name: Mask firewalld service
   command: systemctl mask firewalld.service
 
-- name: Install iptables tools (rhel)
-  action: "{{ ansible_pkg_mgr }}"
-  args:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - iptables-services
-    - ipset
-  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
-
-- name: Install iptables tools (deb)
-  action: "{{ ansible_pkg_mgr }}"
-  args:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - iptables-persistent
-    - ipset
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-
-
 - name: Set systemd_unit_directory for debian based systems
   set_fact:
     systemd_unit_directory: "/lib/systemd/system"
