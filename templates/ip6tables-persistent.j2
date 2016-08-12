@@ -10,7 +10,7 @@
 -A {{ chain.name }} -j {{ rule.jump }}
 {%- if rule.iniface is defined %} -i {{ rule.iniface }}{% endif %}
 {%- if rule.outiface is defined %} -o {{ rule.outiface }}{% endif %}
-{%- if rule.proto is defined and rule.proto != "all" %} -p {{ rule.proto }}{% endif %}
+{%- if rule.proto is defined and rule.proto != "icmp" %} -p {{ rule.proto }}{% if rule.proto_match is defined %} -m {{ rule.proto_match }}{% endif %}{% endif %}
 {% if rule.proto is defined and rule.proto == "icmp" %}
     {%- if rule.icmpv6_type is defined %} --icmpv6-type {{ rule.icmpv6_type }}{% endif %}
 {% endif %}
@@ -47,6 +47,7 @@
 {%- if rule.limit is defined %} -m limit --limit {{ rule.limit }} {% endif %}
 {%- if rule.ctstate is defined %} -m conntrack --ctstate {% for state in rule.ctstate %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.state is defined %} -m state --state {% for state in rule.state %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
+{%- if rule.policy is defined %} -m policy {%- if rule.policy.dir is defined %} --dir {{ rule.policy.dir }}{% endif %}{% if rule.policy.pol is defined %} --pol {{ rule.policy.pol }}{% endif %}{% endif %}
 {%- if rule.jump == "SET" %}
     {%- if rule.add_set is defined and rule.add_set.name is defined %} --add-set {{ rule.add_set.name }} {{ rule.add_set.field|default('src') }}{% endif %}
 {% else %}
