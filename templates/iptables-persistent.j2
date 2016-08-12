@@ -8,12 +8,14 @@
 {% if (rule.only_on_hosts is not defined and rule.not_on_hosts is not defined) or (rule.only_on_hosts is defined and rule.not_on_hosts is defined) or (rule.only_on_hosts is defined and inventory_hostname in rule.only_on_hosts) or (rule.not_on_hosts is defined and inventory_hostname not in rule.not_on_hosts) %}
 {% if rule.custom is not defined %}
 -A {{ chain.name }} -j {{ rule.jump }}
+{%- if rule.comment is defined %} --comment {{ rule.comment | quote }}{% endif %}
 {%- if rule.iniface is defined %} -i {{ rule.iniface }}{% endif %}
 {%- if rule.outiface is defined %} -o {{ rule.outiface }}{% endif %}
+{%- if rule.cpu is defined %} --cpu {{ rule.cpu }}{% endif %}
+{%- if rule.mac_source is defined %} --mac-source {{ rule.mac_source }}{% endif %}
+{%- if rule.helper is defined %} --helper {{ rule.helper }}{% endif %}
 {%- if rule.proto is defined and rule.proto != "icmp" %} -p {{ rule.proto }}{% if rule.proto_match is defined %} -m {{ rule.proto_match }}{% endif %}{% endif %}
-{% if rule.proto is defined and rule.proto == "icmp" %}
-    {%- if rule.icmp_type is defined %} --icmp-type {{ rule.icmp_type }}{% endif %}
-{% endif %}
+{%- if rule.proto is defined and rule.proto == "icmp" %}{% if rule.icmp_type is defined %} --icmp-type {{ rule.icmp_type }}{% endif %}{% endif %}
 {%- if rule.dport is defined %} --dport {{ rule.dport }}{% endif %}
 {%- if rule.dports is defined %} -m multiport --dports {% for port in rule.dports %}{{ port }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.sport is defined %} --sport {{ rule.sport }}{% endif %}
@@ -29,7 +31,10 @@
 {%- if rule.jump == "CONNMARK" %}{%- if rule.restore_mark is defined %} --save-mark{% endif %}{%- if rule.save_mark is defined %} --restore-mark{% endif %}{% endif %}
 {%- if rule.connmark is defined and rule.connmark.id is defined %} -m mark{% if rule.connmark.negative is defined and rule.connmark.negative %} !{% endif %} --mark {{ rule.connmark.id }}{% endif %}
 {%- if rule.proto is defined and rule.proto == "tcp" and rule.tcp_flags is defined %} --tcp-flags {% for flag in rule.tcp_flags %}{{ flag }}{% if not loop.last %} {% endif %}{% endfor %}{% endif %}
-{%- if rule.limit is defined %} -m limit --limit {{ rule.limit }} {% endif %}
+{%- if rule.limit is defined %} -m limit --limit {{ rule.limit }}{% endif %}
+{%- if rule.limit_iface_in is defined %} --limit-iface-in {{ rule.limit_iface_in }}{% endif %}
+{%- if rule.limit_iface_out is defined %} --limit-iface-out {{ rule.limit_iface_out }}{% endif %}
+{%- if rule.ahspi is defined %} --ahspi {{ rule.ahspi }}{% endif %}
 {%- if rule.ctstate is defined %} -m conntrack --ctstate {% for state in rule.ctstate %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.state is defined %} -m state --state {% for state in rule.state %}{{ state }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.policy is defined %} -m policy {%- if rule.policy.dir is defined %} --dir {{ rule.policy.dir }}{% endif %}{% if rule.policy.pol is defined %} --pol {{ rule.policy.pol }}{% endif %}{% endif %}
