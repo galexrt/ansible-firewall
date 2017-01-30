@@ -38,8 +38,4 @@
     src: ipset.j2
     dest: "{{ conf_file_location }}/ipset"
   notify:
-    - stop iptables
-    - stop iptables-persistent
-    - stop ip6tables
-    - stop ip6tables-persistent
     - restart and enable ipset
