@@ -1,7 +1,7 @@
 ansible-firewall
 ================
 
-[![Build Status](https://travis-ci.org/galexrt/ansible-.svg?branch=master)](https://travis-ci.org/galexrt/ansible-)
+[![Build Status](https://travis-ci.org/galexrt/ansible-firewall.svg?branch=master)](https://travis-ci.org/galexrt/ansible-firewall)
 
 A try at at an Ansible ipset and iptables managing role.
 
@@ -25,10 +25,11 @@ Example Playbook
 ----------------
 
 An example playbook on how to use this role:
-
-    - hosts: servers
-      roles:
-         - { role: galexrt.firewall }
+```
+- hosts: servers
+  roles:
+    - { role: galexrt.firewall }
+```
 
 License
 -------
