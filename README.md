@@ -1,6 +1,8 @@
 ansible-firewall
 ================
 
+[![Build Status](https://travis-ci.org/galexrt/ansible-.svg?branch=master)](https://travis-ci.org/galexrt/ansible-)
+
 A try at at an Ansible ipset and iptables managing role.
 
 Requirements
@@ -22,7 +24,7 @@ You can see it [here](https://github.com/galexrt/ansible-common-facts).
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+An example playbook on how to use this role:
 
     - hosts: servers
       roles:
