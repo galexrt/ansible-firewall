@@ -18,7 +18,7 @@
 {%- if rule.hl_lt is defined %} --hl-lt {{ rule.hl_lt }}{% endif %}
 {%- if rule.hl_gt is defined %} --hl-gt {{ rule.hl_gt }}{% endif %}
 {%- if rule.proto is defined and rule.proto != "icmpv6" %} -p {{ rule.proto }}{% if rule.proto_match is defined %} -m {{ rule.proto_match }}{% endif %}{% endif %}
-{%- if rule.proto is defined and rule.proto == "icmpv6" %}{% if rule.icmpv6_type is defined %} --icmpv6-type {{ rule.icmpv6_type }}{% endif %}{% endif %}
+{%- if rule.proto is defined and rule.proto == "icmpv6" %} -p {{ rule.proto }} {% if rule.icmpv6_type is defined %} --icmpv6-type {{ rule.icmpv6_type }}{% endif %}{% endif %}
 {%- if rule.dport is defined %} --dport {{ rule.dport }}{% endif %}
 {%- if rule.dports is defined %} -m multiport --dports {% for port in rule.dports %}{{ port }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.sport is defined %} --sport {{ rule.sport }}{% endif %}
