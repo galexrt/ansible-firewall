@@ -2,12 +2,6 @@
 - name: reload systemd
   command: systemctl --system daemon-reload
 
-- name: check iptables
-  command: "iptables-restore --test {{ conf_file_location + "/iptables"|quote }}"
-
-- name: check ip6tables
-  command: "ip6tables-restore --test {{ conf_file_location + "/ip6tables"|quote }}"
-
 - name: restart and enable ipset
   service:
     name: "ipset"
