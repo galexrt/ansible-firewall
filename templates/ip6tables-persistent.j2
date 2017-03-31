@@ -14,9 +14,9 @@
 {%- if rule.cpu is defined %} --cpu {{ rule.cpu }}{% endif %}
 {%- if rule.mac_source is defined %} --mac-source {{ rule.mac_source }}{% endif %}
 {%- if rule.helper is defined %} --helper {{ rule.helper }}{% endif %}
-{%- if rule.hl_eq is defined %} --hl-eq {{ rule.hl_eq }}{% endif %}
-{%- if rule.hl_lt is defined %} --hl-lt {{ rule.hl_lt }}{% endif %}
-{%- if rule.hl_gt is defined %} --hl-gt {{ rule.hl_gt }}{% endif %}
+{%- if rule.hl_eq is defined %} -m hl --hl-eq {{ rule.hl_eq }}{% endif %}
+{%- if rule.hl_lt is defined %} -m hl --hl-lt {{ rule.hl_lt }}{% endif %}
+{%- if rule.hl_gt is defined %} -m hl --hl-gt {{ rule.hl_gt }}{% endif %}
 {%- if rule.proto is defined and rule.proto != "icmpv6" %} -p {{ rule.proto }}{% if rule.proto_match is defined %} -m {{ rule.proto_match }}{% endif %}{% endif %}
 {%- if rule.proto is defined and rule.proto == "icmpv6" %} -p {{ rule.proto }} {% if rule.icmpv6_type is defined %} --icmpv6-type {{ rule.icmpv6_type }}{% endif %}{% endif %}
 {%- if rule.dport is defined %} --dport {{ rule.dport }}{% endif %}
@@ -80,3 +80,4 @@
 {% endfor %}
 COMMIT
 {% endfor %}
+
