@@ -50,9 +50,9 @@
   template:
     src: "iptables-persistent.j2"
     dest: "{{ conf_file_location }}/iptables"
-    validate: "iptables-restore --test %s"
   notify:
     - start and enable ipset
+    - test iptables
     - restart and enable iptables
     - restart and enable iptables-persistent
 
@@ -60,8 +60,8 @@
   template:
     src: "ip6tables-persistent.j2"
     dest: "/etc/sysconfig/ip6tables"
-    validate: "ip6tables-restore --test %s"
   notify:
     - start and enable ipset
+    - test ip6tables
     - restart and enable ip6tables
     - restart and enable ip6tables-persistent
