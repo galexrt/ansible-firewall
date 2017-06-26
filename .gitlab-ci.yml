@@ -18,4 +18,5 @@ test:
   stage: test
   image: python:2.7
   script:
+    - mkdir -p tests/roles/ && git clone "$(echo $CI_REPOSITORY_URL | sed "s;\/*$CI_PROJECT_PATH.*;;")/ZerBytes/ansible/roles/common-facts.git" tests/roles/zerbytes.common-facts/
     - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
