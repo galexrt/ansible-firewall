@@ -18,6 +18,9 @@ install:
   # Check ansible version
   - ansible --version
 
+  # clone dependencies
+  - git clone https://github.com/galexrt/ansible-common-facts.git ../galexrt.common-facts
+
   # Create ansible.cfg with correct roles_path
   - printf '[defaults]\nroles_path=../' >ansible.cfg
   - echo '---' >tests/test.yml
