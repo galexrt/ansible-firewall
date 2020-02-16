@@ -1,11 +1,8 @@
 ---
 - name: Install ipset
-  action: "{{ ansible_pkg_mgr }}"
-  args:
-    name: "{{ item }}"
+  package:
+    name: "ipset"
     state: latest
-  with_items:
-    - ipset
 
 - name: Check if ipset path is correct
   command: "{{ firewall_ipset_path }} --version"

@@ -28,8 +28,7 @@
 - include: iptables.yml
 
 - name: Install conntrack-tools on Fedora
-  action: "{{ ansible_pkg_mgr }}"
-  args:
+  package:
     name: conntrack-tools
     state: latest
   when: ansible_distribution == "Fedora"
