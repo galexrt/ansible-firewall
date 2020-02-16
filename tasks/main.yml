@@ -11,6 +11,7 @@
     name: firewalld
     enabled: no
     masked: yes
+  ignore_errors: yes
 
 - name: Set systemd_unit_directory for debian based systems
   set_fact:

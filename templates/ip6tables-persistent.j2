@@ -48,9 +48,10 @@
     {%- if rule.restore_mark is defined %} --save-mark{% endif %}
     {%- if rule.save_mark is defined %} --restore-mark{% endif %}
 {% endif %}
+{%- if rule.length is defined %} -m length --limit {{ rule.length }}{% endif %}
 {%- if rule.connmark is defined and rule.connmark.id is defined %} -m mark{% if rule.connmark.negative is defined and rule.connmark.negative %} !{% endif %} --mark {{ rule.connmark.id }}{% endif %}
 {%- if rule.proto is defined and rule.proto == "tcp" and rule.tcp_flags is defined %} --tcp-flags {% for flag in rule.tcp_flags %}{{ flag }}{% if not loop.last %} {% endif %}{% endfor %}{% endif %}
-{%- if rule.limit is defined %} -m limit --limit {{ rule.limit }} {% endif %}
+{%- if rule.limit is defined %} -m limit --limit {{ rule.limit }}{% if rule.limit_burst is defined %} --limit-burst {{ rule.limit_burst }}{% endif %}{% endif %}
 {%- if rule.limit_iface_in is defined %} --limit-iface-in {{ rule.limit_iface_in }}{% endif %}
 {%- if rule.limit_iface_out is defined %} --limit-iface-out {{ rule.limit_iface_out }}{% endif %}
 {%- if rule.ahspi is defined %} --ahspi {{ rule.ahspi }}{% endif %}
@@ -69,6 +70,7 @@
 {%- if rule.jump == "LOG" %}
     {%- if rule.log_prefix is defined %} --log-prefix "{{ rule.log_prefix }} "{% endif %}
     {%- if rule.log_level is defined %} --log-level {{ rule.log_level }}{% endif %}
+    {%- if rule.log_ip_options is defined and rule.log_ip_options %} --log-ip-options{% endif %}
 {% endif %}
 
 {% else %}
