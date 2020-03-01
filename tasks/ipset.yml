@@ -1,8 +1,8 @@
 ---
 - name: Install ipset
   package:
-    name: "ipset"
-    state: latest
+    name: "{{ firewall_ipset_package }}"
+    state: present
 
 - name: Check if ipset path is correct
   command: "{{ firewall_ipset_path }} --version"
@@ -29,10 +29,11 @@
     mode: 0644
   notify:
     - reload systemd
+  when: firewall_ipset_create_service
 
 - name: Generate ipset file
   template:
     src: ipset.j2
-    dest: "{{ conf_file_location }}/ipset"
+    dest: "{{ firewall_ipset_file_location }}"
   notify:
     - restart and enable ipset

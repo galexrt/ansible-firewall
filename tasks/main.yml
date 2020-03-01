@@ -4,7 +4,7 @@
     name: firewalld
     state: stopped
     enabled: no
-  when: has_firewalld
+  ignore_errors: yes
 
 - name: Mask firewalld service
   systemd:
@@ -12,16 +12,6 @@
     enabled: no
     masked: yes
   ignore_errors: yes
-
-- name: Set systemd_unit_directory for debian based systems
-  set_fact:
-    systemd_unit_directory: "/lib/systemd/system"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-
-- name: Set conf_file_location for debian based systems
-  set_fact:
-    conf_file_location: "/etc/default"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - include: ipset.yml
 

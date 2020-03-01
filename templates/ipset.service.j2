@@ -1,15 +1,16 @@
 [Unit]
-Description=Loading IP Sets
-Before=network-pre.target iptables.service ip6tables.service
+Description=Load IPSets
+Before=network-pre.target iptables.service ip6tables.service netfilter-persistent.service
 Wants=network-pre.target
-ConditionPathExists={{ conf_file_location }}/ipset
+ConditionPathExists={{ firewall_ipset_file_location }}
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart={{ firewall_ipset_path }} -f "{{ conf_file_location }}/ipset" restore
-ExecReload={{ firewall_ipset_path }} -f "{{ conf_file_location }}/ipset" restore
+ExecStart={{ firewall_ipset_path }} -f "{{ firewall_ipset_file_location }}" restore
+ExecReload={{ firewall_ipset_path }} -f "{{ firewall_ipset_file_location }}" restore
 ExecStop={{ firewall_ipset_path }} destroy
 
 [Install]
 WantedBy=basic.target
+RequiredBy=netfilter-persistent.service

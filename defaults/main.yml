@@ -1,8 +1,23 @@
 ---
 # defaults file for ansible-firewall
-systemd_unit_directory: "/usr/lib/systemd/system"
+systemd_unit_directory: "/etc/systemd/system"
 
-conf_file_location: "/etc/sysconfig"
+firewall_ipset_package: ipset
+
+# For Debian / Ubuntu
+#firewall_iptables_package: netfilter-persistent
+# For CentOS / Fedora, etc
+firewall_iptables_package: iptables-services
+
+# For Debian / Ubuntu
+#firewall_ipset_file_location: "/etc/defaulf/ipset"
+#firewall_iptables_directory: "/etc/iptables"
+# For CentOS / Fedora, etc
+firewall_ipset_file_location: "/etc/sysconfig/ipset"
+firewall_iptables_directory: "/etc/sysconfig"
+
+firewall_iptables_file_name: iptables
+firewall_ip6tables_file_name: ip6tables
 
 firewall_default_chains:
   - INPUT
@@ -29,3 +44,10 @@ firewall_ip6tables: []
 firewall_ipset_enabled: true
 firewall_start_ipset_before_iptables: true
 firewall_stop_iptables_before_ipset: false
+
+firewall_ipset_create_service: true
+firewall_iptables_create_service: true
+
+firewall_ipset_service: ipset
+firewall_iptables_service: iptables
+firewall_ip6tables_service: ip6tables
