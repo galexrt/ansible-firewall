@@ -1,6 +1,7 @@
 ---
 - name: reload systemd
-  command: systemctl --system daemon-reload
+  systemd:
+    daemon_reload: yes
 
 - name: restart and enable ipset
   service:
