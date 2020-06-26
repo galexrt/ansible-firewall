@@ -26,7 +26,7 @@
     dest: "{{ systemd_unit_directory }}/{{ item }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   with_items:
     - iptables.service
     - ip6tables.service

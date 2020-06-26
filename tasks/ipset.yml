@@ -26,7 +26,7 @@
     dest: "{{ systemd_unit_directory }}/ipset.service"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   notify:
     - reload systemd
   when: firewall_ipset_create_service
