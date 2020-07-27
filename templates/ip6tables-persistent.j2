@@ -27,7 +27,7 @@
 {%- if rule.ports is defined %} -m multiport --ports {% for port in rule.ports %}{{ port }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
 {%- if rule.to_destination is defined %} --to-destination {{ rule.to_destination }}{% endif %}
 {%- if rule.destination is defined %}
-    {%- if rule.not_destination is defined and rule.not_destination == true %} !{% endif %} -d {{ rule.destination }}
+    {%- if rule.not_destination is defined and rule.not_destination == true %} !{% endif %} -d {{ rule.destination -}}
 {% endif %}
 {%- if rule.source is defined %}
     {%- if rule.not_source is defined and rule.not_source == true %} !{% endif %} -s {{ rule.source }}
