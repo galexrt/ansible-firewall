@@ -51,3 +51,5 @@ firewall_iptables_create_service: true
 firewall_ipset_service: ipset
 firewall_iptables_service: iptables
 firewall_ip6tables_service: ip6tables
+
+firewall_use_name_when_comment_empty: false

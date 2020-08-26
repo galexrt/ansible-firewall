@@ -9,7 +9,6 @@
 {% if (rule.only_on_hosts is not defined and rule.not_on_hosts is not defined) or (rule.only_on_hosts is defined and rule.not_on_hosts is defined) or (rule.only_on_hosts is defined and inventory_hostname in rule.only_on_hosts) or (rule.not_on_hosts is defined and inventory_hostname not in rule.not_on_hosts) %}
 {% if rule.custom is not defined %}
 -A {{ chain.name }} -j {{ rule.jump }}
-{%- if rule.comment is defined %} --comment {{ rule.comment | quote }}{% endif %}
 {%- if rule.iniface is defined %} -i {{ rule.iniface }}{% endif %}
 {%- if rule.outiface is defined %} -o {{ rule.outiface }}{% endif %}
 {%- if rule.cpu is defined %} --cpu {{ rule.cpu }}{% endif %}
@@ -73,6 +72,7 @@
     {%- if rule.log_level is defined %} --log-level {{ rule.log_level }}{% endif %}
     {%- if rule.log_ip_options is defined and rule.log_ip_options %} --log-ip-options{% endif %}
 {% endif %}
+{%- if rule.comment is defined or (firewall_use_name_when_comment_empty is defined and firewall_use_name_when_comment_empty and rule.name is defined) %} -m comment --comment "{% if rule.comment is defined %}{{ rule.comment | truncate(255) }}{% else %}{{ rule.name | truncate(255) }}{% endif %}"{% endif %}
 
 {% else %}
 {{ rule.custom }}
