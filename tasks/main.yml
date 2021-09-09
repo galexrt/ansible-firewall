@@ -13,6 +13,14 @@
     masked: yes
   ignore_errors: yes
 
+- name: Ensure firewall_iptables_directory exists
+  file:
+    state: directory
+    path: "{{ firewall_iptables_directory }}"
+    owner: root
+    group: root
+    mode: 0755
+
 - include: ipset.yml
 
 - include: iptables.yml
