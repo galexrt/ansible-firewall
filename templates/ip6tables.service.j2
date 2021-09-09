@@ -1,6 +1,7 @@
 [Unit]
 Description=IPv6 firewall with ip6tables
-ConditionPathExists=/etc/sysconfig/ip6tables
+ConditionPathExists=|!/etc/sysconfig/ip6tables
+ConditionPathExists=|!/etc/default/ip6tables
 
 [Service]
 Type=oneshot

@@ -1,6 +1,7 @@
 [Unit]
 Description=IPv4 firewall with iptables
-ConditionPathExists=/etc/sysconfig/iptables
+ConditionPathExists=|!/etc/sysconfig/iptables
+ConditionPathExists=|!/etc/default/iptables
 
 [Service]
 Type=oneshot

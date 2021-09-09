@@ -21,18 +21,20 @@
   when: iptables_help is defined and iptables_location.stdout is defined
 
 - name: Create iptables service file
-  copy:
+  template:
     src: "{{ item }}"
     dest: "{{ systemd_unit_directory }}/{{ item }}"
     owner: root
     group: root
     mode: '0644'
   with_items:
-    - iptables.service
-    - ip6tables.service
+    - iptables.service.j2
+    - ip6tables.service.j2
   notify:
     - reload systemd
-  when: firewall_iptables_create_service
+  when:
+    - firewall_iptables_create_service
+    - ansible_distribution != "Ubuntu" and ansible_distribution != "Debian"
 
 - name: Generate iptables file
   template:
