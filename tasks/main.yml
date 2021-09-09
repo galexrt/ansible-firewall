@@ -30,3 +30,9 @@
     name: conntrack-tools
     state: latest
   when: ansible_distribution == "Fedora"
+
+- name: Install conntrack on Debian and Ubuntu
+  package:
+    name: conntrack
+    state: latest
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
