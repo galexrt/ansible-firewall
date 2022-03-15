@@ -6,16 +6,15 @@ firewall_ipset_package: ipset
 
 # For Debian / Ubuntu
 #firewall_iptables_package: netfilter-persistent
-# For CentOS / Fedora, etc
-firewall_iptables_package: iptables-services
-
-# For Debian / Ubuntu
-#firewall_ipset_file_location: "/etc/defaulf/ipset"
+#firewall_ipset_file_location: "/etc/default/ipset"
 #firewall_iptables_directory: "/etc/iptables"
-# For CentOS / Fedora, etc
+#firewall_iptables_file_name: rules.v4
+#firewall_ip6tables_file_name: rules.v6
+
+# For CentOS / Fedora, etc.
+firewall_iptables_package: iptables-services
 firewall_ipset_file_location: "/etc/sysconfig/ipset"
 firewall_iptables_directory: "/etc/sysconfig"
-
 firewall_iptables_file_name: iptables
 firewall_ip6tables_file_name: ip6tables
 
