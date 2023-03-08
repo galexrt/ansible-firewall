@@ -5,13 +5,13 @@
     state: present
 
 - name: Check if ipset path is correct
-  command: "{{ firewall_ipset_path }} --version"
+  ansible.builtin.command: "{{ firewall_ipset_path }} --version"
   register: ipset_help
-  ignore_errors: yes
+  ignore_errors: true
   changed_when: ipset_help.rc != 0
 
 - name: Get ipset path
-  command: which ipset
+  ansible.builtin.command: "which ipset"
   register: ipset_location
   when: ipset_help is defined and ipset_help.rc != 0
 

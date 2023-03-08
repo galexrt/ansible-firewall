@@ -5,13 +5,13 @@
     state: present
 
 - name: Check if iptables path is correct
-  command: "{{ firewall_iptables_path }} --version"
+  ansible.builtin.command: "{{ firewall_iptables_path }} --version"
   register: iptables_help
-  ignore_errors: yes
+  ignore_errors: true
   changed_when: iptables_help.rc != 0
 
 - name: Get iptables path
-  command: which iptables
+  ansible.builtin.command: "which iptables"
   register: iptables_location
   when: iptables_help is defined and iptables_help.rc != 0
 

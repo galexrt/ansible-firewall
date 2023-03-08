@@ -1,31 +1,31 @@
 ---
 - name: reload systemd
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
 
 - name: restart and enable ipset
   service:
     name: "{{ firewall_ipset_service }}"
     state: restarted
-    enabled: yes
+    enabled: true
   when: firewall_ipset_enabled
 
 - name: test iptables
-  command: "iptables-restore --test {{ firewall_iptables_directory }}/{{ firewall_iptables_file_name }}"
+  ansible.builtin.command: "iptables-restore --test {{ firewall_iptables_directory }}/{{ firewall_iptables_file_name }}"
 
 - name: test ip6tables
-  command: "ip6tables-restore --test {{ firewall_iptables_directory }}/{{ firewall_ip6tables_file_name }}"
+  ansible.builtin.command: "ip6tables-restore --test {{ firewall_iptables_directory }}/{{ firewall_ip6tables_file_name }}"
 
 - name: restart and enable iptables
   service:
     name: "{{ firewall_iptables_service }}"
     state: restarted
-    enabled: yes
+    enabled: true
   when: not firewall_ipset_enabled or firewall_ipset_service != firewall_iptables_service
 
 - name: restart and enable ip6tables
   service:
     name: "{{ firewall_ip6tables_service }}"
     state: restarted
-    enabled: yes
+    enabled: true
   when: firewall_iptables_service != firewall_ip6tables_service
