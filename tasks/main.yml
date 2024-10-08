@@ -21,9 +21,9 @@
     group: root
     mode: 0755
 
-- include: ipset.yml
+- include_tasks: ipset.yml
 
-- include: iptables.yml
+- include_tasks: iptables.yml
 
 - name: Install conntrack-tools on Fedora
   package:
