@@ -14,25 +14,27 @@
   ignore_errors: true
 
 - name: Ensure firewall_iptables_directory exists
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ firewall_iptables_directory }}"
     owner: root
     group: root
     mode: 0755
 
-- include_tasks: ipset.yml
+- ansible.builtin.include_tasks:
+    file: ipset.yml
 
-- include_tasks: iptables.yml
+- ansible.builtin.include_tasks:
+    file: iptables.yml
 
 - name: Install conntrack-tools on Fedora
-  package:
+  ansible.builtin.package:
     name: conntrack-tools
     state: latest
   when: ansible_distribution == "Fedora"
 
 - name: Install conntrack on Debian and Ubuntu
-  package:
+  ansible.builtin.package:
     name: conntrack
     state: latest
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
