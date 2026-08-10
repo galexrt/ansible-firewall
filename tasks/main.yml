@@ -1,13 +1,13 @@
 ---
 - name: Stop firewalld service
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: stopped
     enabled: false
   ignore_errors: true
 
 - name: Mask firewalld service
-  systemd:
+  ansible.builtin.systemd:
     name: firewalld
     enabled: false
     masked: true
